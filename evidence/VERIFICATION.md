@@ -1,4 +1,4 @@
-# Completed local release verification — 6 November 2026
+# Completed local release verification â€” 6 November 2026
 
 - Python checks: 47 passed (one Starlette/httpx TestClient deprecation warning).
 - Frontend: TypeScript check and Vite production build passed.
@@ -11,6 +11,8 @@
 - Authored quarter SQL example executes and returns Q3 AED 582,290.40, Q4 AED 546,644.75 and growth -6.12%.
 - The shipping capability check now explicitly identifies absent shipment/delivery timestamps.
 - Browser: quarter KPI result; public CSV import; isolated CSV aggregation; correct weather result table; numerical sorting; JSON download; history restoration; chart rendering; and evaluation report inspected. Final screenshots are in this directory.
-- Not verified: Docker image build, hosted deployment, GitHub Actions execution, independent evaluation, arbitrary-data analytical correctness.
+- Not verified: Docker image build, hosted deployment, independent evaluation, arbitrary-data analytical correctness.
 
 Source fingerprints are retained alongside raw experiment evidence. No production-user or general accuracy claim is supported by this local release.
+
+GitHub Actions passed Python checks and the frontend production build on Linux: https://github.com/priyansh8341/QueryCraft/actions/runs/42218865535

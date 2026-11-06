@@ -1,5 +1,7 @@
 # QueryCraft
 
+[![QueryCraft checks](https://github.com/priyansh8341/QueryCraft/actions/workflows/ci.yml/badge.svg?branch=codex%2Fquerycraft-release)](https://github.com/priyansh8341/QueryCraft/actions/workflows/ci.yml)
+
 **Business analytics, explained.** A local AI analytics application with an inspectable question → plan/SQL → execution → chart workflow.
 
 Built by Priyansh Reddy Aleti with substantial Codex assistance. This is an original portfolio implementation. No production customers, public hosting or independently audited accuracy are claimed.
