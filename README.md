@@ -6,7 +6,7 @@
 
 Built by Priyansh Reddy Aleti with substantial Codex assistance. This is an original portfolio implementation. No production customers, public hosting or independently audited accuracy are claimed.
 
-[Download my AI Engineer CV](resume/Priyansh_Reddy_AI_Engineer_CV.pdf) · [Architecture](ARCHITECTURE.md) · [Demo guide](DEMO_GUIDE.md)
+[Architecture](ARCHITECTURE.md) · [Demo guide](DEMO_GUIDE.md)
 
 ![Verified quarter comparison](evidence/completed-comparison.png)
 
