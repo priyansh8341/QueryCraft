@@ -1,0 +1,868 @@
+{
+  "status": "in_progress",
+  "split": "development",
+  "created": "2026-11-06T10:19:40.597820+00:00",
+  "model": "llama3.2:3b",
+  "total": 10,
+  "correct": 7,
+  "executed": 9,
+  "median_seconds": 5.21,
+  "method": "Developer-authored synthetic regression benchmark. Reference result values compared within 0.02 AED; column positions and counts matter, row order ignored. Clarification cases scored by status only; wording requires human review. Both sets have informed implementation fixes. Neither independent nor held-out.",
+  "cases": [
+    {
+      "id": "revenue_total",
+      "question": "What is total completed revenue in AED in 2025?",
+      "category": "aggregate",
+      "correct": false,
+      "status": "wrong_result",
+      "seconds": 12.12,
+      "reference": [
+        [
+          2336484.45
+        ]
+      ],
+      "actual": [
+        [
+          546644.75
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT SUM(revenue_aed) AS total_revenue FROM completed_sales WHERE EXTRACT(QUARTER FROM order_date) = 4 AND EXTRACT(YEAR FROM order_date) = 2025",
+          "columns": [
+            "total_revenue"
+          ],
+          "rows": [
+            [
+              546644.75
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 35.8
+        },
+        "approach": "This query calculates the total completed revenue in AED for the last quarter of 2025 by filtering the completed_sales table to only include orders from Q4 2025.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 11605,
+            "sql": "SELECT SUM(revenue_aed) AS total_revenue FROM completed_sales WHERE EXTRACT(QUARTER FROM order_date) = 4 AND EXTRACT(YEAR FROM order_date) = 2025",
+            "approach": "This query calculates the total completed revenue in AED for the last quarter of 2025 by filtering the completed_sales table to only include orders from Q4 2025.",
+            "tokens": 104
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 35.8,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 11939,
+        "repaired": false
+      }
+    },
+    {
+      "id": "monthly",
+      "question": "What is completed revenue by month in 2025?",
+      "category": "time grouping",
+      "correct": true,
+      "status": "complete",
+      "seconds": 5.12,
+      "reference": [
+        [
+          "2025-01-01T00:00:00",
+          229460.35
+        ],
+        [
+          "2025-02-01T00:00:00",
+          171930.8
+        ],
+        [
+          "2025-03-01T00:00:00",
+          237659.1
+        ],
+        [
+          "2025-04-01T00:00:00",
+          159957.75
+        ],
+        [
+          "2025-05-01T00:00:00",
+          216172.05
+        ],
+        [
+          "2025-06-01T00:00:00",
+          192369.25
+        ],
+        [
+          "2025-07-01T00:00:00",
+          160447.75
+        ],
+        [
+          "2025-08-01T00:00:00",
+          239482.9
+        ],
+        [
+          "2025-09-01T00:00:00",
+          182359.75
+        ],
+        [
+          "2025-10-01T00:00:00",
+          188322.75
+        ],
+        [
+          "2025-11-01T00:00:00",
+          166996.1
+        ],
+        [
+          "2025-12-01T00:00:00",
+          191325.9
+        ]
+      ],
+      "actual": [
+        [
+          "2025-01-01T00:00:00",
+          229460.35
+        ],
+        [
+          "2025-02-01T00:00:00",
+          171930.8
+        ],
+        [
+          "2025-03-01T00:00:00",
+          237659.1
+        ],
+        [
+          "2025-04-01T00:00:00",
+          159957.75
+        ],
+        [
+          "2025-05-01T00:00:00",
+          216172.05
+        ],
+        [
+          "2025-06-01T00:00:00",
+          192369.25
+        ],
+        [
+          "2025-07-01T00:00:00",
+          160447.75
+        ],
+        [
+          "2025-08-01T00:00:00",
+          239482.9
+        ],
+        [
+          "2025-09-01T00:00:00",
+          182359.75
+        ],
+        [
+          "2025-10-01T00:00:00",
+          188322.75
+        ],
+        [
+          "2025-11-01T00:00:00",
+          166996.1
+        ],
+        [
+          "2025-12-01T00:00:00",
+          191325.9
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT DATE_TRUNC('MONTH', order_date) AS month, SUM(revenue_aed) AS revenue_aed FROM completed_sales GROUP BY 1 ORDER BY 1",
+          "columns": [
+            "month",
+            "revenue_aed"
+          ],
+          "rows": [
+            [
+              "2025-01-01T00:00:00",
+              229460.35
+            ],
+            [
+              "2025-02-01T00:00:00",
+              171930.8
+            ],
+            [
+              "2025-03-01T00:00:00",
+              237659.1
+            ],
+            [
+              "2025-04-01T00:00:00",
+              159957.75
+            ],
+            [
+              "2025-05-01T00:00:00",
+              216172.05
+            ],
+            [
+              "2025-06-01T00:00:00",
+              192369.25
+            ],
+            [
+              "2025-07-01T00:00:00",
+              160447.75
+            ],
+            [
+              "2025-08-01T00:00:00",
+              239482.9
+            ],
+            [
+              "2025-09-01T00:00:00",
+              182359.75
+            ],
+            [
+              "2025-10-01T00:00:00",
+              188322.75
+            ],
+            [
+              "2025-11-01T00:00:00",
+              166996.1
+            ],
+            [
+              "2025-12-01T00:00:00",
+              191325.9
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 36.3
+        },
+        "approach": "Grouped by month and calculated the total revenue for each month in 2025.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 4715,
+            "sql": "SELECT date_trunc('month', order_date) AS month, SUM(revenue_aed) AS revenue_aed FROM completed_sales GROUP BY 1 ORDER BY 1",
+            "approach": "Grouped by month and calculated the total revenue for each month in 2025.",
+            "tokens": 79
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 36.3,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 4938,
+        "repaired": false
+      }
+    },
+    {
+      "id": "country",
+      "question": "Show completed revenue by customer country, highest first.",
+      "category": "multi-table join",
+      "correct": true,
+      "status": "complete",
+      "seconds": 5.31,
+      "reference": [
+        [
+          "Saudi Arabia",
+          753768.35
+        ],
+        [
+          "Oman",
+          542037.15
+        ],
+        [
+          "Qatar",
+          536299.3
+        ],
+        [
+          "UAE",
+          504379.65
+        ]
+      ],
+      "actual": [
+        [
+          "Saudi Arabia",
+          753768.35
+        ],
+        [
+          "Oman",
+          542037.15
+        ],
+        [
+          "Qatar",
+          536299.3
+        ],
+        [
+          "UAE",
+          504379.65
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT country, SUM(revenue_aed) AS revenue_aed FROM completed_sales GROUP BY country ORDER BY revenue_aed DESC LIMIT 100",
+          "columns": [
+            "country",
+            "revenue_aed"
+          ],
+          "rows": [
+            [
+              "Saudi Arabia",
+              753768.35
+            ],
+            [
+              "Oman",
+              542037.15
+            ],
+            [
+              "Qatar",
+              536299.3
+            ],
+            [
+              "UAE",
+              504379.65
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 33.0
+        },
+        "approach": "Group by country and calculate the total revenue for each country. Order the results by revenue in descending order and limit to 100 rows.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 4890,
+            "sql": "SELECT country, SUM(revenue_aed) AS revenue_aed FROM completed_sales GROUP BY country ORDER BY revenue_aed DESC LIMIT 100",
+            "approach": "Group by country and calculate the total revenue for each country. Order the results by revenue in descending order and limit to 100 rows.",
+            "tokens": 83
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 33.0,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 5131,
+        "repaired": false
+      }
+    },
+    {
+      "id": "top_customers",
+      "question": "Which five customers have the highest completed revenue? Return customer ID and revenue.",
+      "category": "ranking",
+      "correct": true,
+      "status": "complete",
+      "seconds": 6.82,
+      "reference": [
+        [
+          60,
+          25528.05
+        ],
+        [
+          158,
+          24706.55
+        ],
+        [
+          170,
+          24535.75
+        ],
+        [
+          86,
+          23676.15
+        ],
+        [
+          185,
+          22523.75
+        ]
+      ],
+      "actual": [
+        [
+          60,
+          25528.05
+        ],
+        [
+          158,
+          24706.55
+        ],
+        [
+          170,
+          24535.75
+        ],
+        [
+          86,
+          23676.15
+        ],
+        [
+          185,
+          22523.75
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT customer_id, SUM(revenue_aed) AS revenue FROM completed_sales GROUP BY customer_id ORDER BY revenue DESC LIMIT 5",
+          "columns": [
+            "customer_id",
+            "revenue"
+          ],
+          "rows": [
+            [
+              60,
+              25528.05
+            ],
+            [
+              158,
+              24706.55
+            ],
+            [
+              170,
+              24535.75
+            ],
+            [
+              86,
+              23676.15
+            ],
+            [
+              185,
+              22523.75
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 82.4
+        },
+        "approach": "Group by customer_id, sum revenue_aed, and order by revenue in descending order, then limit to 5 rows",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 5953,
+            "sql": "SELECT customer_id, SUM(revenue_aed) AS revenue FROM completed_sales GROUP BY customer_id ORDER BY revenue DESC LIMIT 5",
+            "approach": "Group by customer_id, sum revenue_aed, and order by revenue in descending order, then limit to 5 rows",
+            "tokens": 79
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 82.4,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 6423,
+        "repaired": false
+      }
+    },
+    {
+      "id": "aov",
+      "question": "What is average order value for completed orders in 2025, in AED?",
+      "category": "grain correctness",
+      "correct": false,
+      "status": "wrong_result",
+      "seconds": 8.91,
+      "reference": [
+        [
+          1477.85
+        ]
+      ],
+      "actual": [
+        [
+          1424.0
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT ROUND(SUM(revenue_aed) / COUNT(DISTINCT order_id)) AS avg_order_value FROM completed_sales WHERE EXTRACT(QUARTER FROM order_date) = 4",
+          "columns": [
+            "avg_order_value"
+          ],
+          "rows": [
+            [
+              1424.0
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 43.6
+        },
+        "approach": "This query calculates the average order value for completed orders in 2025 by dividing the total revenue by the number of distinct orders.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 8348,
+            "sql": "SELECT ROUND(SUM(revenue_aed) / COUNT(DISTINCT order_id)) AS avg_order_value FROM completed_sales WHERE EXTRACT(QUARTER FROM order_date) = 4",
+            "approach": "This query calculates the average order value for completed orders in 2025 by dividing the total revenue by the number of distinct orders.",
+            "tokens": 112
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 43.6,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 8697,
+        "repaired": false
+      }
+    },
+    {
+      "id": "channel",
+      "question": "How many completed orders are there per channel?",
+      "category": "grain correctness",
+      "correct": true,
+      "status": "complete",
+      "seconds": 4.36,
+      "reference": [
+        [
+          "app",
+          558
+        ],
+        [
+          "partner",
+          510
+        ],
+        [
+          "web",
+          513
+        ]
+      ],
+      "actual": [
+        [
+          "partner",
+          510
+        ],
+        [
+          "app",
+          558
+        ],
+        [
+          "web",
+          513
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT channel, COUNT(DISTINCT order_id) AS completed_orders FROM completed_sales GROUP BY channel",
+          "columns": [
+            "channel",
+            "completed_orders"
+          ],
+          "rows": [
+            [
+              "partner",
+              510
+            ],
+            [
+              "app",
+              558
+            ],
+            [
+              "web",
+              513
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 35.2
+        },
+        "approach": "Group by channel and count distinct order_id to get the number of completed orders per channel.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 3934,
+            "sql": "SELECT channel, COUNT(DISTINCT order_id) AS completed_orders FROM completed_sales GROUP BY channel",
+            "approach": "Group by channel and count distinct order_id to get the number of completed orders per channel.",
+            "tokens": 65
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 35.2,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 4202,
+        "repaired": false
+      }
+    },
+    {
+      "id": "category",
+      "question": "What is completed revenue by product category?",
+      "category": "multi-table join",
+      "correct": true,
+      "status": "complete",
+      "seconds": 4.05,
+      "reference": [
+        [
+          "Accessories",
+          230188.7
+        ],
+        [
+          "Electronics",
+          1319004.9
+        ],
+        [
+          "Home",
+          605528.75
+        ],
+        [
+          "Lifestyle",
+          181762.1
+        ]
+      ],
+      "actual": [
+        [
+          "Accessories",
+          230188.7
+        ],
+        [
+          "Electronics",
+          1319004.9
+        ],
+        [
+          "Home",
+          605528.75
+        ],
+        [
+          "Lifestyle",
+          181762.1
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT category, SUM(revenue_aed) AS revenue FROM completed_sales GROUP BY 1 ORDER BY 1",
+          "columns": [
+            "category",
+            "revenue"
+          ],
+          "rows": [
+            [
+              "Accessories",
+              230188.7
+            ],
+            [
+              "Electronics",
+              1319004.9
+            ],
+            [
+              "Home",
+              605528.75
+            ],
+            [
+              "Lifestyle",
+              181762.1
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 35.4
+        },
+        "approach": "Group by category and sum revenue_aed for each category",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 3663,
+            "sql": "SELECT category, SUM(revenue_aed) AS revenue FROM completed_sales GROUP BY 1 ORDER BY 1",
+            "approach": "Group by category and sum revenue_aed for each category",
+            "tokens": 62
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 35.4,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 3887,
+        "repaired": false
+      }
+    },
+    {
+      "id": "refund_total",
+      "question": "What is the total refunded amount in AED across the dataset?",
+      "category": "refunds",
+      "correct": false,
+      "status": "failed",
+      "seconds": 9.68,
+      "reference": [
+        [
+          207171.65
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "failed",
+        "message": "The model could not repair its SQL. No analytical answer was accepted; inspect the trace or use the SQL editor.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 4095,
+            "sql": "SELECT SUM(refund_aed) AS total_refunded_amount FROM refunds",
+            "approach": "This query calculates the total refunded amount in AED by summing up the refund_aed column from the refunds table.",
+            "tokens": 66
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "rejected",
+            "detail": "Binder Error: Referenced column \"refund_aed\" not found in FROM clause!\nCandidate bindings: \"refund_date\", \"refund_id\", \"order_item_id\", \"reason\", \"amount\"\n\nLINE 1: SELECT * FROM (SELECT SUM(refund_aed) AS total_refunded_amount FROM refunds) AS _quer...\n                                  ^^^^^^^^^^"
+          },
+          {
+            "stage": "generation",
+            "attempt": 2,
+            "status": "complete",
+            "plan_status": "clarify",
+            "ms": 5178,
+            "sql": "",
+            "approach": "The query is rejected because the refund_aed column is not present in the refunds table. The refunds table contains the amount column, but not refund_aed.",
+            "tokens": 91
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "net_revenue",
+      "question": "What is net completed revenue after subtracting refunds, in AED?",
+      "category": "refund join",
+      "correct": true,
+      "status": "complete",
+      "seconds": 4.56,
+      "reference": [
+        [
+          2129312.8
+        ]
+      ],
+      "actual": [
+        [
+          2129312.8
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT SUM(net_revenue_aed) AS net_revenue_aed FROM completed_sales",
+          "columns": [
+            "net_revenue_aed"
+          ],
+          "rows": [
+            [
+              2129312.8
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 35.9
+        },
+        "approach": "This query calculates the total net completed revenue after subtracting refunds by summing the net_revenue_aed column from the completed_sales table.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 4191,
+            "sql": "SELECT SUM(net_revenue_aed) AS net_revenue_aed FROM completed_sales",
+            "approach": "This query calculates the total net completed revenue after subtracting refunds by summing the net_revenue_aed column from the completed_sales table.",
+            "tokens": 73
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 35.9,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 4400,
+        "repaired": false
+      }
+    },
+    {
+      "id": "refund_rate",
+      "question": "What is the overall completed-item refund rate as a percentage, rounded to two decimals?",
+      "category": "denominator",
+      "correct": true,
+      "status": "complete",
+      "seconds": 4.24,
+      "reference": [
+        [
+          8.28
+        ]
+      ],
+      "actual": [
+        [
+          8.28
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT ROUND(AVG(refunded_item) * 100, 2) AS refund_rate FROM completed_sales",
+          "columns": [
+            "refund_rate"
+          ],
+          "rows": [
+            [
+              8.28
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 33.7
+        },
+        "approach": "Calculate the average refunded item percentage by averaging the refunded_item column and multiplying by 100.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 3881,
+            "sql": "SELECT ROUND(AVG(refunded_item) * 100, 2) AS refund_rate FROM completed_sales",
+            "approach": "Calculate the average refunded item percentage by averaging the refunded_item column and multiplying by 100.",
+            "tokens": 67
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 33.7,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 4079,
+        "repaired": false
+      }
+    }
+  ]
+}

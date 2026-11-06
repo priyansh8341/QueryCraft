@@ -1,0 +1,9 @@
+{
+  "source": "https://raw.githubusercontent.com/vega/vega-datasets/main/data/seattle-weather.csv",
+  "publisher": "Vega datasets / NOAA",
+  "sha256": "0845078a290b48e3149ab8639966824110a251db4e06fc144c06ebb534af23be",
+  "downloaded": "2026-11-06",
+  "license_metadata": "U.S. Government Dataset (other-pd), per Vega datapackage metadata",
+  "original_source": "https://www.ncdc.noaa.gov/cdo-web/datatools/records",
+  "transformation": "None"
+}

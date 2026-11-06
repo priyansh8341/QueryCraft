@@ -1,0 +1,492 @@
+{
+  "status": "complete",
+  "model": "llama3.2:3b",
+  "source": "fixtures/weather.provenance.json",
+  "oracle": "Independent Python csv/statistics calculations; no SQL reference aggregation. Developer-authored questions; not a blinded or independently reviewed benchmark. Missing-data cases score status only.",
+  "correct": 8,
+  "total": 8,
+  "cases": [
+    {
+      "id": "count",
+      "question": "How many records are in the weather table?",
+      "correct": true,
+      "expected": [
+        [
+          1461
+        ]
+      ],
+      "actual": [
+        [
+          1461
+        ]
+      ],
+      "seconds": 2.75,
+      "payload": {
+        "status": "complete",
+        "route": "typed_aggregate",
+        "semantic_plan": {
+          "operation": "count",
+          "column": "*",
+          "group_by": "none",
+          "filter_column": "none",
+          "filter_operator": "eq",
+          "filter_value": ""
+        },
+        "result": {
+          "sql": "SELECT COUNT(*) AS count_value FROM \"weather\"",
+          "columns": [
+            "count_value"
+          ],
+          "rows": [
+            [
+              1461
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 43.6
+        },
+        "trace": [
+          {
+            "stage": "aggregate_intent",
+            "attempt": 1,
+            "status": "complete",
+            "detail": "{\"operation\": \"count\", \"column\": \"*\", \"group_by\": \"none\", \"filter_column\": \"none\", \"filter_operator\": \"eq\", \"filter_value\": \"\"}"
+          },
+          {
+            "stage": "aggregate_compilation",
+            "status": "complete",
+            "sql": "SELECT COUNT(*) AS count_value FROM \"weather\"  ",
+            "detail": "Model-extracted columns/filter; server-owned aggregation, rounding and identifier quoting."
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 43.6
+          }
+        ],
+        "model": "llama3.2:3b",
+        "approach": "Apply count to * in weather; grouping: none; filter column: none.",
+        "total_ms": 2743,
+        "repaired": false
+      }
+    },
+    {
+      "id": "rain_count",
+      "question": "How many records have weather equal to 'rain'?",
+      "correct": true,
+      "expected": [
+        [
+          641
+        ]
+      ],
+      "actual": [
+        [
+          641
+        ]
+      ],
+      "seconds": 2.55,
+      "payload": {
+        "status": "complete",
+        "route": "typed_aggregate",
+        "semantic_plan": {
+          "operation": "count",
+          "column": "*",
+          "group_by": "none",
+          "filter_column": "weather",
+          "filter_operator": "eq",
+          "filter_value": "rain"
+        },
+        "result": {
+          "sql": "SELECT COUNT(*) AS count_value FROM \"weather\" WHERE \"weather\" = 'rain'",
+          "columns": [
+            "count_value"
+          ],
+          "rows": [
+            [
+              641
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 41.6
+        },
+        "trace": [
+          {
+            "stage": "aggregate_intent",
+            "attempt": 1,
+            "status": "complete",
+            "detail": "{\"operation\": \"count\", \"column\": \"*\", \"group_by\": \"none\", \"filter_column\": \"weather\", \"filter_operator\": \"eq\", \"filter_value\": \"rain\"}"
+          },
+          {
+            "stage": "aggregate_compilation",
+            "status": "complete",
+            "sql": "SELECT COUNT(*) AS count_value FROM \"weather\" WHERE \"weather\" = 'rain' ",
+            "detail": "Model-extracted columns/filter; server-owned aggregation, rounding and identifier quoting."
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 41.6
+          }
+        ],
+        "model": "llama3.2:3b",
+        "approach": "Apply count to * in weather; grouping: none; filter column: weather.",
+        "total_ms": 2545,
+        "repaired": false
+      }
+    },
+    {
+      "id": "average_wind",
+      "question": "Show average wind by weather type, rounded to two decimals.",
+      "correct": true,
+      "expected": [
+        [
+          "drizzle",
+          2.37
+        ],
+        [
+          "rain",
+          3.67
+        ],
+        [
+          "sun",
+          2.96
+        ],
+        [
+          "snow",
+          4.41
+        ],
+        [
+          "fog",
+          2.48
+        ]
+      ],
+      "actual": [
+        [
+          "drizzle",
+          2.37
+        ],
+        [
+          "fog",
+          2.48
+        ],
+        [
+          "rain",
+          3.67
+        ],
+        [
+          "snow",
+          4.41
+        ],
+        [
+          "sun",
+          2.96
+        ]
+      ],
+      "seconds": 2.74,
+      "payload": {
+        "status": "complete",
+        "route": "typed_aggregate",
+        "semantic_plan": {
+          "operation": "avg",
+          "column": "wind",
+          "group_by": "weather",
+          "filter_column": "none",
+          "filter_operator": "eq",
+          "filter_value": ""
+        },
+        "result": {
+          "sql": "SELECT \"weather\", ROUND(AVG(\"wind\"), 2) AS avg_value FROM \"weather\" GROUP BY \"weather\" ORDER BY \"weather\"",
+          "columns": [
+            "weather",
+            "avg_value"
+          ],
+          "rows": [
+            [
+              "drizzle",
+              2.37
+            ],
+            [
+              "fog",
+              2.48
+            ],
+            [
+              "rain",
+              3.67
+            ],
+            [
+              "snow",
+              4.41
+            ],
+            [
+              "sun",
+              2.96
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 41.5
+        },
+        "trace": [
+          {
+            "stage": "aggregate_intent",
+            "attempt": 1,
+            "status": "complete",
+            "detail": "{\"operation\": \"avg\", \"column\": \"wind\", \"group_by\": \"weather\", \"filter_column\": \"none\", \"filter_operator\": \"eq\", \"filter_value\": \"\"}"
+          },
+          {
+            "stage": "aggregate_compilation",
+            "status": "complete",
+            "sql": "SELECT \"weather\", ROUND(AVG(\"wind\"),2) AS avg_value FROM \"weather\"  GROUP BY \"weather\" ORDER BY \"weather\"",
+            "detail": "Model-extracted columns/filter; server-owned aggregation, rounding and identifier quoting."
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 41.5
+          }
+        ],
+        "model": "llama3.2:3b",
+        "approach": "Apply avg to wind in weather; grouping: weather; filter column: none.",
+        "total_ms": 2744,
+        "repaired": false
+      }
+    },
+    {
+      "id": "max_temperature",
+      "question": "What is the maximum temp_max across all weather records?",
+      "correct": true,
+      "expected": [
+        [
+          35.6
+        ]
+      ],
+      "actual": [
+        [
+          35.6
+        ]
+      ],
+      "seconds": 2.52,
+      "payload": {
+        "status": "complete",
+        "route": "typed_aggregate",
+        "semantic_plan": {
+          "operation": "max",
+          "column": "temp_max",
+          "group_by": "none",
+          "filter_column": "none",
+          "filter_operator": "eq",
+          "filter_value": ""
+        },
+        "result": {
+          "sql": "SELECT ROUND(MAX(\"temp_max\"), 2) AS max_value FROM \"weather\"",
+          "columns": [
+            "max_value"
+          ],
+          "rows": [
+            [
+              35.6
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 36.8
+        },
+        "trace": [
+          {
+            "stage": "aggregate_intent",
+            "attempt": 1,
+            "status": "complete",
+            "detail": "{\"operation\": \"max\", \"column\": \"temp_max\", \"group_by\": \"none\", \"filter_column\": \"none\", \"filter_operator\": \"eq\", \"filter_value\": \"\"}"
+          },
+          {
+            "stage": "aggregate_compilation",
+            "status": "complete",
+            "sql": "SELECT ROUND(MAX(\"temp_max\"),2) AS max_value FROM \"weather\"  ",
+            "detail": "Model-extracted columns/filter; server-owned aggregation, rounding and identifier quoting."
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 36.8
+          }
+        ],
+        "model": "llama3.2:3b",
+        "approach": "Apply max to temp_max in weather; grouping: none; filter column: none.",
+        "total_ms": 2521,
+        "repaired": false
+      }
+    },
+    {
+      "id": "distinct_types",
+      "question": "How many distinct weather types are recorded?",
+      "correct": true,
+      "expected": [
+        [
+          5
+        ]
+      ],
+      "actual": [
+        [
+          5
+        ]
+      ],
+      "seconds": 2.62,
+      "payload": {
+        "status": "complete",
+        "route": "typed_aggregate",
+        "semantic_plan": {
+          "operation": "count_distinct",
+          "column": "weather",
+          "group_by": "none",
+          "filter_column": "none",
+          "filter_operator": "eq",
+          "filter_value": ""
+        },
+        "result": {
+          "sql": "SELECT COUNT(DISTINCT \"weather\") AS count_distinct_value FROM \"weather\"",
+          "columns": [
+            "count_distinct_value"
+          ],
+          "rows": [
+            [
+              5
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 41.7
+        },
+        "trace": [
+          {
+            "stage": "aggregate_intent",
+            "attempt": 1,
+            "status": "complete",
+            "detail": "{\"operation\": \"count_distinct\", \"column\": \"weather\", \"group_by\": \"none\", \"filter_column\": \"none\", \"filter_operator\": \"eq\", \"filter_value\": \"\"}"
+          },
+          {
+            "stage": "aggregate_compilation",
+            "status": "complete",
+            "sql": "SELECT COUNT(DISTINCT \"weather\") AS count_distinct_value FROM \"weather\"  ",
+            "detail": "Model-extracted columns/filter; server-owned aggregation, rounding and identifier quoting."
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 41.7
+          }
+        ],
+        "model": "llama3.2:3b",
+        "approach": "Apply count_distinct to weather in weather; grouping: none; filter column: none.",
+        "total_ms": 2622,
+        "repaired": false
+      }
+    },
+    {
+      "id": "sun_precipitation",
+      "question": "What is average precipitation for records where weather is 'sun', rounded to two decimals?",
+      "correct": true,
+      "expected": [
+        [
+          0.0
+        ]
+      ],
+      "actual": [
+        [
+          0.0
+        ]
+      ],
+      "seconds": 2.83,
+      "payload": {
+        "status": "complete",
+        "route": "typed_aggregate",
+        "semantic_plan": {
+          "operation": "avg",
+          "column": "precipitation",
+          "group_by": "none",
+          "filter_column": "weather",
+          "filter_operator": "eq",
+          "filter_value": "sun"
+        },
+        "result": {
+          "sql": "SELECT ROUND(AVG(\"precipitation\"), 2) AS avg_value FROM \"weather\" WHERE \"weather\" = 'sun'",
+          "columns": [
+            "avg_value"
+          ],
+          "rows": [
+            [
+              0.0
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 53.5
+        },
+        "trace": [
+          {
+            "stage": "aggregate_intent",
+            "attempt": 1,
+            "status": "complete",
+            "detail": "{\"operation\": \"avg\", \"column\": \"precipitation\", \"group_by\": \"none\", \"filter_column\": \"weather\", \"filter_operator\": \"eq\", \"filter_value\": \"sun\"}"
+          },
+          {
+            "stage": "aggregate_compilation",
+            "status": "complete",
+            "sql": "SELECT ROUND(AVG(\"precipitation\"),2) AS avg_value FROM \"weather\" WHERE \"weather\" = 'sun' ",
+            "detail": "Model-extracted columns/filter; server-owned aggregation, rounding and identifier quoting."
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 53.5
+          }
+        ],
+        "model": "llama3.2:3b",
+        "approach": "Apply avg to precipitation in weather; grouping: none; filter column: weather.",
+        "total_ms": 2825,
+        "repaired": false
+      }
+    },
+    {
+      "id": "missing_revenue",
+      "question": "What is revenue generated by the weather observations?",
+      "correct": true,
+      "expected": null,
+      "actual": [],
+      "seconds": 0.0,
+      "payload": {
+        "status": "clarify",
+        "message": "Revenue is not defined in the selected data: no revenue, sales-amount or price fields are available. Select a suitable business dataset or define the required measure.",
+        "trace": [
+          {
+            "stage": "capability_check",
+            "status": "clarify",
+            "detail": "Revenue is not defined in the selected data: no revenue, sales-amount or price fields are available. Select a suitable business dataset or define the required measure."
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "missing_period",
+      "question": "What was maximum temp_max in 2026?",
+      "correct": true,
+      "expected": null,
+      "actual": [],
+      "seconds": 0.0,
+      "payload": {
+        "status": "clarify",
+        "message": "The available date columns end in 2015. There are no observed records for 2026. Upload that period or explicitly request a separately evaluated forecasting workflow.",
+        "trace": [
+          {
+            "stage": "capability_check",
+            "status": "clarify",
+            "detail": "The available date columns end in 2015. There are no observed records for 2026. Upload that period or explicitly request a separately evaluated forecasting workflow."
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    }
+  ]
+}

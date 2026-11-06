@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: querycraft
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/live
+    envVars:
+      - key: QUERYCRAFT_DATA
+        value: /app/data
+      - key: QUERYCRAFT_SECURE_COOKIE
+        value: '1'
+      - key: QUERYCRAFT_ALLOWED_HOSTS
+        sync: false
+      - key: QUERYCRAFT_ALLOWED_ORIGINS
+        sync: false
+      - key: QUERYCRAFT_ACCESS_USER
+        value: demo
+      - key: QUERYCRAFT_ACCESS_PASSWORD
+        sync: false
+      - key: QUERYCRAFT_PROVIDER
+        value: openai
+      - key: OPENAI_MODEL
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+    disk:
+      name: querycraft-data
+      mountPath: /app/data
+      sizeGB: 1

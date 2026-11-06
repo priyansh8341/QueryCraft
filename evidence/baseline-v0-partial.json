@@ -1,0 +1,409 @@
+{
+  "status": "in_progress",
+  "created": "2026-11-06T10:02:19.243600+00:00",
+  "model": "llama3.2:3b",
+  "total": 10,
+  "correct": 0,
+  "executed": 0,
+  "median_seconds": 7.46,
+  "method": "Developer-authored synthetic benchmark. Reference result values compared within 0.02 AED; column positions matter, row order ignored. Clarification cases scored by status only; clarification quality is not automatically established. Not independent or held-out.",
+  "cases": [
+    {
+      "id": "revenue_total",
+      "question": "What is total completed revenue in AED in 2025?",
+      "category": "aggregate",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 19.38,
+      "reference": [
+        [
+          2336484.45
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 19153,
+            "sql": "SELECT SUM(quantity * unit_price * (1 - discount_pct)) FROM orders WHERE status = 'completed'",
+            "approach": "This query calculates the total completed revenue by summing the product of quantity, unit_price, and (1 - discount_pct) for all completed orders.",
+            "tokens": 79
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "monthly",
+      "question": "What is completed revenue by month in 2025?",
+      "category": "time grouping",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 7.0,
+      "reference": [
+        [
+          "2025-01-01T00:00:00",
+          229460.35
+        ],
+        [
+          "2025-02-01T00:00:00",
+          171930.8
+        ],
+        [
+          "2025-03-01T00:00:00",
+          237659.1
+        ],
+        [
+          "2025-04-01T00:00:00",
+          159957.75
+        ],
+        [
+          "2025-05-01T00:00:00",
+          216172.05
+        ],
+        [
+          "2025-06-01T00:00:00",
+          192369.25
+        ],
+        [
+          "2025-07-01T00:00:00",
+          160447.75
+        ],
+        [
+          "2025-08-01T00:00:00",
+          239482.9
+        ],
+        [
+          "2025-09-01T00:00:00",
+          182359.75
+        ],
+        [
+          "2025-10-01T00:00:00",
+          188322.75
+        ],
+        [
+          "2025-11-01T00:00:00",
+          166996.1
+        ],
+        [
+          "2025-12-01T00:00:00",
+          191325.9
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 6836,
+            "sql": "SELECT date_trunc('month', order_date) AS order_month, SUM(quantity * unit_price * (1 - discount_pct)) AS completed_revenue\nFROM orders\nJOIN order_items ON orders.order_id = order_items.order_id\nWHERE orders.status = 'completed'\nGROUP BY order_month",
+            "approach": "Join orders and order_items on order_id, filter orders.status = 'completed', and group by month of order_date. Then sum quantity * unit_price * (1 - discount_pct) for each group.",
+            "tokens": 129
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "country",
+      "question": "Show completed revenue by customer country, highest first.",
+      "category": "multi-table join",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 8.57,
+      "reference": [
+        [
+          "Saudi Arabia",
+          753768.35
+        ],
+        [
+          "Oman",
+          542037.15
+        ],
+        [
+          "Qatar",
+          536299.3
+        ],
+        [
+          "UAE",
+          504379.65
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 8423,
+            "sql": "SELECT c.country, SUM(oi.quantity * i.unit_price * (1 - oi.discount_pct)) AS completed_revenue FROM orders o JOIN customers c ON o.customer_id = c.customer_id JOIN order_items oi ON o.order_id = oi.order_id JOIN products i ON oi.product_id = i.product_id WHERE o.status = 'completed' GROUP BY c.country ORDER BY completed_revenue DESC LIMIT 100",
+            "approach": "Join the orders, customers, order_items, and products tables to get the completed revenue by customer country. Group the results by country and order by completed revenue in descending order. Limit the output to 100 rows.",
+            "tokens": 153
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "top_customers",
+      "question": "Which five customers have the highest completed revenue? Return customer ID and revenue.",
+      "category": "ranking",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 7.92,
+      "reference": [
+        [
+          60,
+          25528.05
+        ],
+        [
+          158,
+          24706.55
+        ],
+        [
+          170,
+          24535.75
+        ],
+        [
+          86,
+          23676.15
+        ],
+        [
+          185,
+          22523.75
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 7780,
+            "sql": "SELECT c.customer_id, SUM(oi.quantity * oi.unit_price * (1 - oi.discount_pct)) AS revenue\nFROM orders o\nJOIN order_items oi ON o.order_id = oi.order_id\nJOIN customers c ON o.customer_id = c.customer_id\nWHERE o.status = 'completed'\nGROUP BY c.customer_id\nORDER BY revenue DESC\nLIMIT 5",
+            "approach": "Join the orders and order_items tables to get the completed revenue for each customer. Group by customer ID and order the results in descending order by revenue. Limit the output to the top 5 customers.",
+            "tokens": 144
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "aov",
+      "question": "What is average order value for completed orders in 2025, in AED?",
+      "category": "grain correctness",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 10.17,
+      "reference": [
+        [
+          1477.85
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 9994,
+            "sql": "SELECT SUM(oi.quantity * item.unit_price * (1 - oi.discount_pct)) / COUNT(DISTINCT o.order_id) FROM orders o JOIN order_items oi ON o.order_id = oi.order_id JOIN products item ON oi.product_id = item.product_id WHERE o.status = 'completed' AND o.order_date BETWEEN '2025-01-01' AND '2025-12-31'",
+            "approach": "This query calculates the average order value for completed orders in 2025 by joining the orders, order_items, and products tables. It filters orders to only include those with a status of 'completed' and an order date between January 1st, 2025, and December 31st, 2025.",
+            "tokens": 173
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "channel",
+      "question": "How many completed orders are there per channel?",
+      "category": "grain correctness",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 3.69,
+      "reference": [
+        [
+          "app",
+          558
+        ],
+        [
+          "partner",
+          510
+        ],
+        [
+          "web",
+          513
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 3517,
+            "sql": "SELECT COUNT(DISTINCT order_id) AS count FROM orders WHERE status = 'completed' GROUP BY channel",
+            "approach": "Count distinct order_id for completed orders grouped by channel",
+            "tokens": 61
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "category",
+      "question": "What is completed revenue by product category?",
+      "category": "multi-table join",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 5.79,
+      "reference": [
+        [
+          "Accessories",
+          230188.7
+        ],
+        [
+          "Electronics",
+          1319004.9
+        ],
+        [
+          "Home",
+          605528.75
+        ],
+        [
+          "Lifestyle",
+          181762.1
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 5638,
+            "sql": "SELECT p.category, SUM(i.quantity * i.unit_price * (1 - i.discount_pct)) AS completed_revenue FROM order_items i JOIN products p ON i.product_id = p.product_id JOIN orders o ON i.order_id = o.order_id WHERE o.status = 'completed' GROUP BY p.category",
+            "approach": "Join order_items with products and orders, filter completed orders, and group by product category.",
+            "tokens": 107
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "refund_total",
+      "question": "What is the total refunded amount in AED across the dataset?",
+      "category": "refunds",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 2.02,
+      "reference": [
+        [
+          207171.65
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 1878,
+            "sql": "",
+            "approach": "",
+            "tokens": 28
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "net_revenue",
+      "question": "What is net completed revenue after subtracting refunds, in AED?",
+      "category": "refund join",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 6.89,
+      "reference": [
+        [
+          2129312.8
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 6751,
+            "sql": "SELECT SUM(CASE WHEN r.refund_id IS NULL THEN quantity * unit_price * (1 - discount_pct) ELSE 0 END) - SUM(r.amount) AS net_completed_revenue FROM orders o JOIN order_items oi ON o.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id LEFT JOIN refunds r ON oi.order_item_id = r.order_item_id WHERE o.status = 'completed'",
+            "approach": "Join orders and order_items to get completed revenue, then subtract refunds amount from completed revenue",
+            "tokens": 131
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    },
+    {
+      "id": "refund_rate",
+      "question": "What is the overall completed-item refund rate as a percentage, rounded to two decimals?",
+      "category": "denominator",
+      "correct": false,
+      "status": "clarify",
+      "seconds": 16.49,
+      "reference": [
+        [
+          8.28
+        ]
+      ],
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Please make the question more specific.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "ms": 16291,
+            "sql": "WITH completed_items AS (SELECT COUNT(DISTINCT order_item_id) AS total_items FROM order_items WHERE order_items.order_id IN (SELECT order_id FROM orders WHERE status = 'completed') AND order_items.product_id IN (SELECT product_id FROM products WHERE list_price IS NOT NULL)), refunds AS (SELECT COUNT(*) AS total_refunds FROM refunds WHERE refunds.refund_id IN (SELECT refunds.order_item_id FROM order_items WHERE order_items.order_id IN (SELECT order_id FROM orders WHERE status = 'completed'))), completed_refunds AS (SELECT COUNT(*) AS total_completed_refunds FROM refunds WHERE refunds.refund_id IN (SELECT refunds.order_item_id FROM order_items WHERE order_items.order_id IN (SELECT order_id FROM orders WHERE status = 'completed')) AND refunds.amount > 0) SELECT ROUND(CAST((total_completed_refunds / total_items) * 100) AS DECIMAL(5, 2)), 'completed-item refund rate' FROM completed_items JOIN refunds ON completed_items.total_items = refunds.total_refunds JOIN completed_refunds ON completed_items.total_items = completed_refunds.total_completed_refunds",
+            "approach": "This query first calculates the total number of completed items, the total number of refunds, and the total number of completed refunds. Then it calculates the completed-item refund rate by dividing the total number of completed refunds by the total number of completed items and multiplying by 100. The result is rounded to two decimal places.",
+            "tokens": 314
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    }
+  ]
+}

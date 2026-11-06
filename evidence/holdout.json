@@ -1,0 +1,376 @@
+{
+  "status": "complete",
+  "split": "supplementary regression",
+  "created": "2026-11-06T12:04:52.302482+00:00",
+  "model": "llama3.2:3b",
+  "total": 6,
+  "correct": 6,
+  "executed": 5,
+  "median_seconds": 4.33,
+  "method": "Developer-authored synthetic regression benchmark. Reference result values compared within 0.02 AED; column positions and counts matter, row order ignored. Clarification cases scored by status only; wording requires human review. Both sets have informed implementation fixes. Neither independent nor held-out.",
+  "cases": [
+    {
+      "id": "h_cancelled",
+      "question": "How many orders were cancelled in 2025?",
+      "category": "filter",
+      "correct": true,
+      "status": "complete",
+      "seconds": 6.63,
+      "reference": [
+        [
+          142
+        ]
+      ],
+      "actual": [
+        [
+          142
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT COUNT(*) AS cancelled_orders FROM orders WHERE status = 'cancelled' AND order_date BETWEEN '2025-01-01' AND '2025-12-31'",
+          "columns": [
+            "cancelled_orders"
+          ],
+          "rows": [
+            [
+              142
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 40.3
+        },
+        "approach": "This query counts the number of orders with a status of 'cancelled' and an order date within the 2025 calendar year.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 5920,
+            "sql": "SELECT COUNT(*) AS cancelled_orders FROM orders WHERE status = 'cancelled' AND order_date BETWEEN '2025-01-01' AND '2025-12-31'",
+            "approach": "This query counts the number of orders with a status of 'cancelled' and an order date within the 2025 calendar year.",
+            "tokens": 88
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 40.3,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 6386,
+        "repaired": false
+      }
+    },
+    {
+      "id": "h_customers",
+      "question": "How many distinct customers placed a completed order in 2025?",
+      "category": "distinct grain",
+      "correct": true,
+      "status": "complete",
+      "seconds": 5.76,
+      "reference": [
+        [
+          240
+        ]
+      ],
+      "actual": [
+        [
+          240
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT COUNT(DISTINCT customer_id) AS customer_count FROM completed_sales WHERE order_date BETWEEN '2025-01-01' AND '2025-12-31'",
+          "columns": [
+            "customer_count"
+          ],
+          "rows": [
+            [
+              240
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 47.5
+        },
+        "approach": "Count the distinct customer_ids from the completed_sales table where the order_date falls within 2025.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 5227,
+            "sql": "SELECT COUNT(DISTINCT customer_id) AS customer_count FROM completed_sales WHERE order_date BETWEEN '2025-01-01' AND '2025-12-31'",
+            "approach": "Count the distinct customer_ids from the completed_sales table where the order_date falls within 2025.",
+            "tokens": 82
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 47.5,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 5532,
+        "repaired": false
+      }
+    },
+    {
+      "id": "h_net_channel",
+      "question": "Show net revenue after refunds by channel in AED.",
+      "category": "net revenue grouping",
+      "correct": true,
+      "status": "complete",
+      "seconds": 4.66,
+      "reference": [
+        [
+          "app",
+          765228.85
+        ],
+        [
+          "partner",
+          668275.5
+        ],
+        [
+          "web",
+          695808.45
+        ]
+      ],
+      "actual": [
+        [
+          "web",
+          695808.45
+        ],
+        [
+          "partner",
+          668275.5
+        ],
+        [
+          "app",
+          765228.85
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT channel, SUM(net_revenue_aed) AS net_revenue_aed FROM completed_sales GROUP BY channel",
+          "columns": [
+            "channel",
+            "net_revenue_aed"
+          ],
+          "rows": [
+            [
+              "web",
+              695808.45
+            ],
+            [
+              "partner",
+              668275.5
+            ],
+            [
+              "app",
+              765228.85
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 34.7
+        },
+        "approach": "Group by channel and sum net revenue after refunds for each channel.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 4138,
+            "sql": "SELECT channel, SUM(net_revenue_aed) AS net_revenue_aed FROM completed_sales GROUP BY channel",
+            "approach": "Group by channel and sum net revenue after refunds for each channel.",
+            "tokens": 63
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 34.7,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 4476,
+        "repaired": false
+      }
+    },
+    {
+      "id": "h_refund_reason",
+      "question": "Show the total refunded amount by refund reason.",
+      "category": "grouping",
+      "correct": true,
+      "status": "complete",
+      "seconds": 4.0,
+      "reference": [
+        [
+          "changed_mind",
+          79601.8
+        ],
+        [
+          "damaged",
+          74093.0
+        ],
+        [
+          "wrong_item",
+          53476.85
+        ]
+      ],
+      "actual": [
+        [
+          "damaged",
+          74093.0
+        ],
+        [
+          "wrong_item",
+          53476.85
+        ],
+        [
+          "changed_mind",
+          79601.8
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT reason, SUM(amount) AS total_refunded FROM refunds GROUP BY reason",
+          "columns": [
+            "reason",
+            "total_refunded"
+          ],
+          "rows": [
+            [
+              "damaged",
+              74093.0
+            ],
+            [
+              "wrong_item",
+              53476.85
+            ],
+            [
+              "changed_mind",
+              79601.8
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 37.4
+        },
+        "approach": "This query groups the refunds by reason and calculates the total refunded amount for each reason.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 3481,
+            "sql": "SELECT reason, SUM(amount) AS total_refunded FROM refunds GROUP BY reason",
+            "approach": "This query groups the refunds by reason and calculates the total refunded amount for each reason.",
+            "tokens": 60
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 37.4,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 3805,
+        "repaired": false
+      }
+    },
+    {
+      "id": "h_units",
+      "question": "How many units were sold in completed orders in total?",
+      "category": "units",
+      "correct": true,
+      "status": "complete",
+      "seconds": 3.66,
+      "reference": [
+        [
+          7985
+        ]
+      ],
+      "actual": [
+        [
+          7985
+        ]
+      ],
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "SELECT SUM(quantity) AS total_units_sold FROM completed_sales",
+          "columns": [
+            "total_units_sold"
+          ],
+          "rows": [
+            [
+              7985
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 34.9
+        },
+        "approach": "This query sums up the quantity of all items sold in completed orders.",
+        "trace": [
+          {
+            "stage": "generation",
+            "attempt": 1,
+            "status": "complete",
+            "plan_status": "ready",
+            "ms": 3246,
+            "sql": "SELECT SUM(quantity) AS total_units_sold FROM completed_sales",
+            "approach": "This query sums up the quantity of all items sold in completed orders.",
+            "tokens": 53
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 34.9,
+            "detail": "AST policy and execution passed. This does not establish semantic correctness."
+          }
+        ],
+        "model": "llama3.2:3b",
+        "total_ms": 3475,
+        "repaired": false
+      }
+    },
+    {
+      "id": "h_shipping",
+      "question": "What is the average shipping delivery duration in days?",
+      "category": "unavailable data",
+      "correct": true,
+      "status": "clarify",
+      "seconds": 0.0,
+      "reference": null,
+      "actual": [],
+      "payload": {
+        "status": "clarify",
+        "message": "Delivery duration cannot be calculated: this dataset has no shipment or delivery timestamps. Upload those records and define their relationship to orders.",
+        "trace": [
+          {
+            "stage": "capability_check",
+            "status": "clarify",
+            "detail": "Delivery duration cannot be calculated: this dataset has no shipment or delivery timestamps. Upload those records and define their relationship to orders."
+          }
+        ],
+        "model": "llama3.2:3b"
+      }
+    }
+  ]
+}

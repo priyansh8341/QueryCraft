@@ -1,0 +1,129 @@
+{
+  "method": "Independent Python accumulation over raw line-item rows for product selection; full-quarter total checked against raw-table reference. Developer-authored cases informed implementation.",
+  "cases": [
+    {
+      "question": "Compare completed revenue in Q3 and Q4 2025. Return Q3 revenue, Q4 revenue and percentage growth rounded to two decimals.",
+      "correct": true,
+      "seconds": 2.33,
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "WITH quarterly AS (SELECT EXTRACT(QUARTER FROM order_date) AS period, SUM(revenue_aed) AS measure, 100.0 * AVG(refunded_item) AS refund_rate FROM completed_sales WHERE EXTRACT(YEAR FROM order_date) = 2025 AND EXTRACT(QUARTER FROM order_date) IN (3, 4) GROUP BY period), compared AS (SELECT MAX(CASE WHEN period = 3 THEN measure END) AS previous_value, MAX(CASE WHEN period = 4 THEN measure END) AS current_value FROM quarterly) SELECT ROUND(previous_value, 2) AS q3_revenue_aed, ROUND(current_value, 2) AS q4_revenue_aed, ROUND(100.0 * (current_value - previous_value) / NULLIF(previous_value, 0), 2) AS growth_pct FROM compared",
+          "columns": [
+            "q3_revenue_aed",
+            "q4_revenue_aed",
+            "growth_pct"
+          ],
+          "rows": [
+            [
+              582290.4,
+              546644.75,
+              -6.12
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 41.7
+        },
+        "trace": [
+          {
+            "stage": "semantic_intent",
+            "attempt": 1,
+            "status": "complete",
+            "detail": "{\"intent\": {\"metric\": \"revenue\", \"dimension\": \"total\", \"include_refund_rate\": false}, \"calendar_periods\": {\"year\": 2025, \"previous\": 3, \"current\": 4}}"
+          },
+          {
+            "stage": "semantic_compilation",
+            "status": "complete",
+            "sql": "WITH quarterly AS (\n      SELECT EXTRACT(QUARTER FROM order_date) AS period, SUM(revenue_aed) AS measure,\n             100.0*AVG(refunded_item) AS refund_rate\n      FROM completed_sales\n      WHERE EXTRACT(YEAR FROM order_date)=2025\n        AND EXTRACT(QUARTER FROM order_date) IN (3,4)\n      GROUP BY period\n    ), compared AS (SELECT MAX(CASE WHEN period=3 THEN measure END) AS previous_value, MAX(CASE WHEN period=4 THEN measure END) AS current_value FROM quarterly )\n    SELECT ROUND(previous_value,2) AS q3_revenue_aed, ROUND(current_value,2) AS q4_revenue_aed, ROUND(100.0*(current_value-previous_value)/NULLIF(previous_value,0),2) AS growth_pct FROM compared  ",
+            "detail": "Model-selected intent; server-owned metric expressions and full-calendar-quarter aggregation. No result values are hardcoded."
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 41.7
+          }
+        ],
+        "model": "llama3.2:3b",
+        "route": "semantic_comparison",
+        "semantic_plan": {
+          "metric": "revenue",
+          "dimension": "total",
+          "include_refund_rate": false,
+          "year": 2025,
+          "previous": 3,
+          "current": 4
+        },
+        "approach": "Compare revenue by total across complete Q3 and Q4 of 2025. Growth is relative to the earlier quarter; zero baselines return NULL.",
+        "total_ms": 2120,
+        "repaired": false
+      }
+    },
+    {
+      "question": "Which products grew revenue from Q3 to Q4 2025 while their refund rate increased?",
+      "correct": true,
+      "seconds": 1.89,
+      "payload": {
+        "status": "complete",
+        "result": {
+          "sql": "WITH quarterly AS (SELECT product_name, EXTRACT(QUARTER FROM order_date) AS period, SUM(revenue_aed) AS measure, 100.0 * AVG(refunded_item) AS refund_rate FROM completed_sales WHERE EXTRACT(YEAR FROM order_date) = 2025 AND EXTRACT(QUARTER FROM order_date) IN (3, 4) GROUP BY product_name, period), compared AS (SELECT product_name, MAX(CASE WHEN period = 3 THEN measure END) AS previous_value, MAX(CASE WHEN period = 4 THEN measure END) AS current_value, MAX(CASE WHEN period = 3 THEN refund_rate END) AS previous_refund_rate, MAX(CASE WHEN period = 4 THEN refund_rate END) AS current_refund_rate FROM quarterly GROUP BY product_name) SELECT product_name, ROUND(previous_value, 2) AS q3_revenue_aed, ROUND(current_value, 2) AS q4_revenue_aed, ROUND(100.0 * (current_value - previous_value) / NULLIF(previous_value, 0), 2) AS growth_pct, ROUND(previous_refund_rate, 2) AS q3_refund_rate_pct, ROUND(current_refund_rate, 2) AS q4_refund_rate_pct, ROUND(current_refund_rate - previous_refund_rate, 2) AS refund_change_pp FROM compared WHERE current_value > previous_value AND current_refund_rate > previous_refund_rate ORDER BY growth_pct DESC, product_name",
+          "columns": [
+            "product_name",
+            "q3_revenue_aed",
+            "q4_revenue_aed",
+            "growth_pct",
+            "q3_refund_rate_pct",
+            "q4_refund_rate_pct",
+            "refund_change_pp"
+          ],
+          "rows": [
+            [
+              "Atlas Headphones",
+              55944.7,
+              142496.7,
+              154.71,
+              2.38,
+              31.74,
+              29.36
+            ]
+          ],
+          "truncated": false,
+          "row_limit": 500,
+          "elapsed_ms": 39.1
+        },
+        "trace": [
+          {
+            "stage": "semantic_intent",
+            "attempt": 1,
+            "status": "complete",
+            "detail": "{\"intent\": {\"metric\": \"revenue\", \"dimension\": \"product\", \"include_refund_rate\": true}, \"calendar_periods\": {\"year\": 2025, \"previous\": 3, \"current\": 4}}"
+          },
+          {
+            "stage": "semantic_compilation",
+            "status": "complete",
+            "sql": "WITH quarterly AS (\n      SELECT product_name, EXTRACT(QUARTER FROM order_date) AS period, SUM(revenue_aed) AS measure,\n             100.0*AVG(refunded_item) AS refund_rate\n      FROM completed_sales\n      WHERE EXTRACT(YEAR FROM order_date)=2025\n        AND EXTRACT(QUARTER FROM order_date) IN (3,4)\n      GROUP BY product_name, period\n    ), compared AS (SELECT product_name, MAX(CASE WHEN period=3 THEN measure END) AS previous_value, MAX(CASE WHEN period=4 THEN measure END) AS current_value, MAX(CASE WHEN period=3 THEN refund_rate END) AS previous_refund_rate, MAX(CASE WHEN period=4 THEN refund_rate END) AS current_refund_rate FROM quarterly GROUP BY product_name)\n    SELECT product_name, ROUND(previous_value,2) AS q3_revenue_aed, ROUND(current_value,2) AS q4_revenue_aed, ROUND(100.0*(current_value-previous_value)/NULLIF(previous_value,0),2) AS growth_pct, ROUND(previous_refund_rate,2) AS q3_refund_rate_pct, ROUND(current_refund_rate,2) AS q4_refund_rate_pct, ROUND(current_refund_rate-previous_refund_rate,2) AS refund_change_pp FROM compared WHERE current_value > previous_value AND current_refund_rate > previous_refund_rate ORDER BY growth_pct DESC NULLS LAST, product_name",
+            "detail": "Model-selected intent; server-owned metric expressions and full-calendar-quarter aggregation. No result values are hardcoded."
+          },
+          {
+            "stage": "validation_and_execution",
+            "status": "passed",
+            "ms": 39.1
+          }
+        ],
+        "model": "llama3.2:3b",
+        "route": "semantic_comparison",
+        "semantic_plan": {
+          "metric": "revenue",
+          "dimension": "product",
+          "include_refund_rate": true,
+          "year": 2025,
+          "previous": 3,
+          "current": 4
+        },
+        "approach": "Compare revenue by product across complete Q3 and Q4 of 2025. Growth is relative to the earlier quarter; zero baselines return NULL.",
+        "total_ms": 1742,
+        "repaired": false
+      }
+    }
+  ]
+}
